@@ -8,8 +8,8 @@ function Login() {
   const [showpassword, setshowpassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    set_username: "",
-    confirm_password: "",
+    email: "",
+    password: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -30,12 +30,12 @@ function Login() {
     // Validation logic
     const newErrors = {};
 
-    if (!formData.set_username.trim()) {
-      newErrors.set_username = "Username is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Username is required";
     }
 
-    if (!formData.confirm_password.trim()) {
-      newErrors.confirm_password = "Password is required";
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
     }
 
     // If there are errors, set them and prevent form submission
@@ -45,7 +45,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/login", {
+      const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,16 +92,16 @@ function Login() {
 
               <input
                 type="text"
-                name="set_username"
-                value={formData.set_username}
+                name="email"
+                value={formData.email}
                 onChange={handleInputChange}
                 className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
                 autoComplete="off"
                 autoFocus="on"
               />
 
-              {errors.set_username && (
-                <p className="text-red-500 text-sm">{errors.set_username}</p>
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
               )}
             </div>
 
@@ -110,8 +110,8 @@ function Login() {
 
               <input
                 type={showpassword ? "text" : "password"}
-                name="confirm_password"
-                value={formData.confirm_password}
+                name="password"
+                value={formData.password}
                 onChange={handleInputChange}
                 className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
                 autoComplete="off"
@@ -149,9 +149,9 @@ function Login() {
                 )}
               </div>
 
-              {errors.confirm_password && (
+              {errors.password && (
                 <p className="text-red-500 text-sm">
-                  {errors.confirm_password}
+                  {errors.password}
                 </p>
               )}
             </div>
