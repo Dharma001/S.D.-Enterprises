@@ -6,11 +6,9 @@ function Register() {
   const navigate = useNavigate()
     const [showpassword, setshowpassword] = useState(false);
   const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
+    name: "",
     email: "",
-    set_username: "",
-    set_password: "",
+    password: "",
     confirm_password: "",
   });
   const [errors, setErrors] = useState({});
@@ -28,34 +26,17 @@ function Register() {
 
     // Validation logic
     const newErrors = {};
-    if (!formData.first_name.trim()) {
-      newErrors.first_name = "First Name is required";
-    }
-    if (!formData.last_name.trim()) {
-      newErrors.last_name = "Last Name is required";
+    if (!formData.name.trim()) {
+      newErrors.name = "First Name is required";
     }
     if (!formData.email.trim()) {
       newErrors.email = "email is required";
     }else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Invalid email address" 
     }
-    
-    if (formData.set_username.trim().length <3) {
-      newErrors.set_username = "Username must be at least 3 characters long";
-    }
-    if (!formData.set_password.trim()) {
-      newErrors.set_password = "Password is required";
-    } else if (formData.set_password.length < 8) {
-      newErrors.set_password = "Password must be at least 8 characters long";
-    } else if (
-      !/(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])/.test(formData.set_password)
-    ) {
-      newErrors.set_password =
-        "Password must contain at least one uppercase letter, one number, and one special character";
-    }
 
     // Password matching check
-    if (formData.set_password !== formData.confirm_password) {
+    if (formData.password !== formData.confirm_password) {
       newErrors.confirm_password = "Passwords do not match";
     }
 
@@ -66,7 +47,7 @@ function Register() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/register", {
+      const response = await fetch("http://localhost:3000/5000/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,30 +91,15 @@ function Register() {
               <label className="text-black">First Name</label>
               <input
                 type="text"
-                name="first_name"
-                value={formData.first_name}
+                name="name"
+                value={formData.name}
                 onChange={handleInputChange}
                 className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
                 autoComplete="off"
                 autoFocus="on"
               />
-              {errors.first_name && (
-                <p className="text-red-500 text-sm">{errors.first_name}</p>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-black ">Last Name</label>
-              <input
-                type="text"
-                name="last_name"
-                value={formData.last_name}
-                onChange={handleInputChange}
-                className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
-                autoComplete="off"
-                autoFocus="on"
-              />
-              {errors.last_name && (
-                <p className="text-red-500 text-sm">{errors.last_name}</p>
+              {errors.name && (
+                <p className="text-red-500 text-sm">{errors.name}</p>
               )}
             </div>
             <div className="flex flex-col gap-2">
@@ -151,27 +117,12 @@ function Register() {
                 <p className="text-red-500 text-sm">{errors.email}</p>
               )}
             </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-black ">Set Username</label>
-              <input
-                type="text"
-                name="set_username"
-                value={formData.set_username}
-                onChange={handleInputChange}
-                className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
-                autoComplete="off"
-                autoFocus="on"
-              />
-              {errors.set_username && (
-                <p className="text-red-500 text-sm">{errors.set_username}</p>
-              )}
-            </div>
             <div className="relative flex flex-col gap-2">
               <label className="text-black ">Set Password</label>
               <input
                 type={showpassword ? "text" : "password"} // ternary oparater
-                name="set_password"
-                value={formData.set_password}
+                name="password"
+                value={formData.password}
                 onChange={handleInputChange}
                 className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
                 autoComplete="off"
@@ -207,8 +158,8 @@ function Register() {
                   </svg>
                 )}
               </div>
-              {errors.set_password && (
-                <p className="text-red-500 text-sm">{errors.set_password}</p>
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
               )}
             </div>
             <div className="relative flex flex-col gap-2">
