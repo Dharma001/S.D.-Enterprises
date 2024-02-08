@@ -18,7 +18,7 @@ export const Register = async (req, res) => {
   if (password !== confPassword)
     return res
       .status(400)
-      .json({ msg: "Password dan Confirm Password tidak sama " });
+      .json({ msg: "Password and Confirm Password do not match " });
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
   try {
