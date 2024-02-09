@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 function Login() {
   const navigate = useNavigate();
 
@@ -16,34 +15,27 @@ function Login() {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    // Clear the specific field error when the user starts typing
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Clear previous errors
     setErrors({});
-
-    // Validation logic
     const newErrors = {};
-
+  
     if (!formData.email.trim()) {
       newErrors.email = "Username is required";
     }
-
+  
     if (!formData.password.trim()) {
       newErrors.password = "Password is required";
     }
-
-    // If there are errors, set them and prevent form submission
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-
+  
     try {
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
@@ -52,50 +44,40 @@ function Login() {
         },
         body: JSON.stringify(formData),
       });
-
+  
       console.log("Response status:", response.status);
-
+  
       if (response.ok) {
-        // Handle successful login
-        const successData = await response.json();
-
-        // Store the token or perform any other action here
+        const { accessToken } = await response.json();
+        localStorage.setItem('accessToken', accessToken);
+  
         navigate("/admindashboard");
-        toast.success(successData.message);
-        console.log("Login successful:", successData.message);
+        toast.success("Login successful!");
       } else {
-        // Handle login error
         const errorData = await response.json();
-        toast.error(errorData.message || "Login failed");
-        console.error("Login failed:", errorData.message || "Unknown error");
+        toast.error(errorData.message || "Invalid Username or Password");
       }
     } catch (error) {
-      console.error("Login failed:", error.message);
     }
   };
-
-  console.log(formData);
-
   return (
     <div className="container mx-auto">
-      <div className="flex items-center justify-center h-screen">
-        <div className="flex flex-col gap-5 p-4 rounded bg-white lg:w-1/4 md:w-1/2 sm:w-4/5 shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
-          <div className="flex flex-col justify-center items-center">
-            <p className="font-serif text-4xl font-bold text-center text-black">
+      <div className="flex items-center justify-center h-screen w-full">
+        <div className="flex flex-col gap-3 rounded bg-gray-50 border px-[50px] py-[30px]">
+            <p className="text-3xl my-3 font-semibold">
               Login
             </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="flex flex-col gap-5">
+          <form onSubmit={handleLogin} className="flex flex-col gap-3 w-full">
             <div className="flex flex-col gap-2">
-              <label className="text-black">Username</label>
+              <label className="text-black">Email</label>
 
               <input
                 type="text"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                placeholder="Enter Your email"
+                className="px-4 py-3 text-black bg-white border rounded-sm outline-none"
                 autoComplete="off"
                 autoFocus="on"
               />
@@ -111,22 +93,23 @@ function Login() {
               <input
                 type={showpassword ? "text" : "password"}
                 name="password"
+                placeholder="Enter Your password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className="h-12 pl-2 text-black bg-white border rounded outline-none shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                className="px-4 py-3 text-black bg-white border rounded-sm outline-none"
                 autoComplete="off"
                 autoFocus="off"
               />
 
               <div
-                className="absolute top-10 right-1"
+                className="absolute top-[48px] right-5"
                 onClick={() => setshowpassword(!showpassword)}
               >
                 {showpassword ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -137,8 +120,8 @@ function Login() {
                 ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                   >
                     <path
@@ -155,8 +138,15 @@ function Login() {
                 </p>
               )}
             </div>
-
-            <button className="bg-blue-500 text-white h-10">Login</button>
+            <div className="flex justify-end my-1">
+            <Link
+              className="font-semibold hover:text-blue-800"
+              to="/adminRegister"
+            >
+              &nbsp;Forgot Password?
+            </Link>
+          </div>
+            <button className="bg-blue-500 p-3 text-white">Login</button>
           </form>
 
           <hr></hr>
@@ -165,18 +155,10 @@ function Login() {
             <p>Don't have an account? </p>
 
             <Link
-              className="font-bold hover:text-blue-800"
-              to="/adminregiester"
+              className="font-semibold hover:text-blue-800"
+              to="/adminRegister"
             >
               &nbsp;Click here to register
-            </Link>
-          </div>
-          <div className="flex justify-center items-center">
-            <Link
-              className="font-bold hover:text-blue-800"
-              to="/adminregiester"
-            >
-              &nbsp;Forgot Password?
             </Link>
           </div>
         </div>

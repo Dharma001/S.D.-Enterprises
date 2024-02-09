@@ -3,7 +3,7 @@ import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { fetchWithAuth } from '../auth/api';
 function AdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -13,12 +13,28 @@ function AdminDashboard() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleLogout = () => {
-    // Perform logout actions here (e.g., clear user session)
-    // Assuming logout is successful, display a message and navigate to the login page
-    toast.success("Logout successful");
-    navigate("/adminlogin");
+  const handleLogout = async () => {
+    try {
+      const response = await fetchWithAuth("http://localhost:5000/logout", {
+        method: "DELETE",
+        credentials: "include",
+      });
+  
+      if (response.ok) {
+        toast.success("Logout successful");
+        navigate("/adminlogin");
+        localStorage.removeItem('accessToken');
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Logout failed");
+        console.error("Logout failed:", errorData.message);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error.message);
+      toast.error("Error during logout");
+    }
   };
+
 
   return (
     <div className="flex h-screen bg-white gap-0.5">

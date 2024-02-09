@@ -59,7 +59,7 @@ function Register() {
 
       if (response.ok) {
         const successData = await response.json();
-        navigate("/login");
+        navigate("/adminlogin");
         toast.success(successData.msg);
       } else {
         const errorData = await response.json();
